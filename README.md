@@ -18,9 +18,9 @@ chmod +x tv-episode-filename-formatter.sh
 
 *Parameters:*
 
-[-n] seriesName - Series name (ex: Hokuto no Ken)
-[-s] seriesSeasonNumber - Series season number (ex: 1,12)
-[-d] episodeDirectory - Episode directory (ex: "c:/Hokuto No Ken")
-[-e] fileExtension - File Extension filter (ex: mkv, mp4)
-[-l] episodeNumberLength - Episode number length (ex: Series with that is 99 or less would be 2, 100 to 999 would be 3).  Must be 2 or 3.
-[-p] episodeNumberStartPosition - The position where the episode number starts for each file.  Assumes it is the same for each file (ex: Hokuto no Ken 001.mkv would be 14, which is )
+- [-n] seriesName - Series name (ex: Hokuto no Ken)
+- [-s] seriesSeasonNumber - Series season number (ex: 1,12)
+- [-d] episodeDirectory - Episode directory (ex: "c:/Hokuto No Ken")
+- [-e] fileExtension - File Extension filter (ex: mkv, mp4)
+- [-l] episodeNumberLength - Episode number length (ex: Series with that is 99 or less would be 2, 100 to 999 would be 3).  Must be 2 or 3.
+- [-p] episodeNumberStartPosition - The position where the episode number starts for each file.  Assumes it is the same for each file (ex: Hokuto no Ken 001.mkv would be 14, which is )
