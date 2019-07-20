@@ -66,9 +66,14 @@ zero="0"
 preS="S"
 # E before episode number
 preE="E"
+# log file
+logFile="$episodeDirectory/tv-episode-filename-formatter.log"
 
 # directory location with filter
 files="$episodeDirectory/*.$fileExtension"
+
+# write to log file
+echo -e "Parameters:  [-n] $seriesName [-s] $seriesSeasonNumber [-d] $episodeDirectory [-e] $fileExtension [-l] $episodeNumberLength [-p] $episodeNumberStartPosition\n\n" | tee -a "$logFile"
 
 # concat 0 onto series season number if length is 1
 if [ ${#seriesSeasonNumber} == 1 ]; then
@@ -78,7 +83,8 @@ fi
 # loop through each file
 for f in $files
 do
-	echo "Processing file $f"
+	# write to log file
+	echo -e "Processing file $f" | tee -a "$logFile"
 	
 	# get the file name only
 	filename=$(basename -- "$f")
@@ -97,17 +103,17 @@ do
 		else
 			newEpisodeNumber=${episodeNumber:1:2} # start at second position in string
 		fi
-		
 		newEpisodeName="$episodeDirectory/$seriesName $preS$seriesSeasonNumber$preE$newEpisodeNumber.$fileExtension"
-		echo "New file name: $newEpisodeName"
 		# rename file
 		mv "$f" "$newEpisodeName"
+		# write to log file
+		echo -e "New file name: $newEpisodeName\n\n" | tee -a "$logFile"
 	else
 		newEpisodeName="$episodeDirectory/$seriesName $preS$seriesSeasonNumber$preE$episodeNumber.$fileExtension"
 		# rename file		
 		mv "$f" "$newEpisodeName"
-		echo "New file name: $newEpisodeName"
-	fi	
+		echo -e "New file name: $newEpisodeName\n\n" | tee -a "$logFile"
+	fi
 done
 
 
