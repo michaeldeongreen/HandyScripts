@@ -24,6 +24,7 @@ chmod +x tv-episode-filename-formatter.sh
 - [-e] fileExtension - File Extension filter **(ex: mkv, mp4)**
 - [-l] episodeNumberLength - Episode number length **(ex: Series with that is 99 or less would be 2, 100 to 999 would be 3)**.  Must be 2 or 3.
 - [-p] episodeNumberStartPosition - The position where the episode number starts for each file.  Assumes it is the same for each file **(ex: Hokuto no Ken 001.mkv would be 14, which is )**
+- [-t] testing - OPTIONAL flag to do a test run before renaming the files.  Output will be logged to the log file.
 
 *Notes:*
 

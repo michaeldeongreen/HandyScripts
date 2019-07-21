@@ -3,16 +3,20 @@
 ##########################################################################################################################################################################################
 #- Purpose: Script is used to rename tv episodes into a "S##E#" format ie "Hokuto no Ken 001.mkv" to "Hokuto no Ken S01E01.mkv"
 #- Parameters are:
-#- [-n] seriesName - Series name (ex: Hokuto no Ken)
-#- [-s] seriesSeasonNumber - Series season number (ex: 1,12)
-#- [-d] episodeDirectory - Episode directory (ex: "c:/Hokuto No Ken")
-#- [-e] fileExtension - File Extension filter (ex: mkv, mp4)
+#- [-n] seriesName - Series name (ex: Hokuto no Ken).
+#- [-s] seriesSeasonNumber - Series season number (ex: 1,12).
+#- [-d] episodeDirectory - Episode directory (ex: "c:/Hokuto No Ken").
+#- [-e] fileExtension - File Extension filter (ex: mkv, mp4).
 #- [-l] episodeNumberLength - Episode number length (ex: Series with that is 99 or less would be 2, 100 to 999 would be 3).  Must be 2 or 3.
-#- [-p] episodeNumberStartPosition - The position where the episode number starts for each file.  Assumes it is the same for each file (ex: Hokuto no Ken 001.mkv would be 14, which is )
+#- [-p] episodeNumberStartPosition - The position where the episode number starts for each file.  Assumes it is the same for each file (ex: Hokuto no Ken 001.mkv would be 14, which is).
+#- [-t] testing - OPTIONAL flag to do a test run before renaming the files.  Output will be logged to the log file.
 ###########################################################################################################################################################################################
 
+# set default execute mode to testing = false
+testing="false"
+
 # Loop, get parameters & remove any spaces from input
-while getopts "n:s:d:e:l:p:" opt; do
+while getopts "n:s:d:e:l:p:t" opt; do
     case $opt in
         n)
             # Series Name
@@ -21,7 +25,7 @@ while getopts "n:s:d:e:l:p:" opt; do
         s)
             # Series Season Number
             seriesSeasonNumber=$OPTARG
-        ;;		
+        ;;
         d)
             # Episode Directory
             episodeDirectory=$OPTARG
@@ -29,14 +33,18 @@ while getopts "n:s:d:e:l:p:" opt; do
         e)
             # File Extension
             fileExtension=$OPTARG
-        ;;			
+        ;;
         l)
             # Episode Number Length
             episodeNumberLength=$OPTARG
-        ;;		
+        ;;
         p)
             # Episode Number Start Position
             episodeNumberStartPosition=$OPTARG
+        ;;
+        t)
+            # Testing
+            testing="true"
         ;;			
         \?)            
             # If user did not provide required parameters then show usage.
@@ -57,6 +65,28 @@ if [[ "$episodeNumberLength" -ne "2" && "$episodeNumberLength" -ne "3" ]]; then
 	exit 1;
 fi
 
+#######################################################
+#- function used to rename a file using the mv command
+#- $1 - Original file name
+#- $2 - New file name
+#######################################################
+rename () {
+	if [[ "$testing" == "false" ]]; then
+		mv "$1" "$2"
+	fi
+	
+	# write to log file
+	writeToLogFile "New file name: $2\n\n"
+}
+
+#######################################################
+#- function used to write to log file
+#- $1 - Log file entry
+#######################################################
+writeToLogFile () {
+	echo -e "$1" | tee -a "$logFile"
+}
+
 # resetting the internal separator to newline so a directory with spaces is not split by spaces
 IFS='|'
 
@@ -73,30 +103,18 @@ logFile="$episodeDirectory/tv-episode-filename-formatter.log"
 files="$episodeDirectory/*.$fileExtension"
 
 # write to log file
-echo -e "Parameters:  [-n] $seriesName [-s] $seriesSeasonNumber [-d] $episodeDirectory [-e] $fileExtension [-l] $episodeNumberLength [-p] $episodeNumberStartPosition\n\n" | tee -a "$logFile"
+writeToLogFile "Parameters:  [-n] $seriesName [-s] $seriesSeasonNumber [-d] $episodeDirectory [-e] $fileExtension [-l] $episodeNumberLength [-p] $episodeNumberStartPosition\n\n"
 
 # concat 0 onto series season number if length is 1
 if [ ${#seriesSeasonNumber} == 1 ]; then
 	seriesSeasonNumber="0$seriesSeasonNumber"
 fi
 
-#######################################################
-#- function used to rename a file using the mv command
-#- $1 - Original file name
-#- $2 - New file name
-#######################################################
-rename () {
-	mv "$1" "$2"
-	
-	# write to log file
-	echo -e "New file name: $2\n\n" | tee -a "$logFile"
-}
-
 # loop through each file
 for f in $files
 do
 	# write to log file
-	echo -e "Processing file $f" | tee -a "$logFile"
+	writeToLogFile "Processing file $f"
 	
 	# get the file name only
 	filename=$(basename -- "$f")
