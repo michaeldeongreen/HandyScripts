@@ -80,6 +80,18 @@ if [ ${#seriesSeasonNumber} == 1 ]; then
 	seriesSeasonNumber="0$seriesSeasonNumber"
 fi
 
+#######################################################
+#- function used to rename a file using the mv command
+#- $1 - Original file name
+#- $2 - New file name
+#######################################################
+rename () {
+	mv "$1" "$2"
+	
+	# write to log file
+	echo -e "New file name: $2\n\n" | tee -a "$logFile"
+}
+
 # loop through each file
 for f in $files
 do
@@ -105,14 +117,11 @@ do
 		fi
 		newEpisodeName="$episodeDirectory/$seriesName $preS$seriesSeasonNumber$preE$newEpisodeNumber.$fileExtension"
 		# rename file
-		mv "$f" "$newEpisodeName"
-		# write to log file
-		echo -e "New file name: $newEpisodeName\n\n" | tee -a "$logFile"
+		rename "$f" "$newEpisodeName"
 	else
 		newEpisodeName="$episodeDirectory/$seriesName $preS$seriesSeasonNumber$preE$episodeNumber.$fileExtension"
 		# rename file		
-		mv "$f" "$newEpisodeName"
-		echo -e "New file name: $newEpisodeName\n\n" | tee -a "$logFile"
+		rename "$f" "$newEpisodeName"
 	fi
 done
 
