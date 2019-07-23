@@ -49,7 +49,7 @@ while getopts "n:s:d:e:l:p:tr" opt; do
             # Testing
             testing="true"
         ;;
-        t)
+        r)
             # Renumber
             renumber="true"
         ;;
@@ -190,7 +190,7 @@ if [ ${#seriesSeasonNumber} == 1 ]; then
 fi
 
 # determine whether episodes need to be renumbered
-if [ $"renumber" == "false" ]; then
+if [ "$renumber" == "false" ]; then
 	dontRenumberEpisodes
 else
 	renumberEpisodes
