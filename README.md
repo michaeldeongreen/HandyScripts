@@ -16,7 +16,7 @@ chmod +x tv-episode-filename-formatter.sh
 ./tv-episode-filename-formatter.sh -n "Hokuto no Ken" -s "1" -d "C:/temp/My Plex/My Anime/Hokuto no Ken" -e "mkv" -l "3" -p "14"
 ```
 
-*Parameters:*
+*Parameter:*
 
 - [-n] seriesName - Series name *(ex: Hokuto no Ken)*.
 - [-s] seriesSeasonNumber - Series season number *(ex: 1,12)*.
