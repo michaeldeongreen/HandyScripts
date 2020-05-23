@@ -11,7 +11,28 @@
 #- [-p] episodeNumberStartPosition - The position where the episode number starts for each file.  Assumes it is the same for each file (ex: Hokuto no Ken 001.mkv would be 14, which is).
 #- [-t] testing - OPTIONAL flag to do a test run before renaming the files.  Output will be logged to the log file.
 #- [-r] renumber - OPTIONAL flag used to re-number the episodes, starting at 1.  Assumes files are ordered correctly by default.
+#- [-h] help
 ###########################################################################################################################################################################################
+
+############################################################
+#- function used to print out script usage
+############################################################
+function usage() {
+    echo
+    echo "Arguments:"
+    echo -e "\t-n \t Series name (ex: Hokuto no Ken) (required)"
+    echo -e "\t-s \t Series season number (ex: 1,12) (required)"
+    echo -e "\t-d \t Episode directory (ex: "c:/Hokuto No Ken") (required)"    
+    echo -e "\t-e \t File Extension filter (ex: mkv, mp4) (required)"        
+    echo -e "\t-l \t Episode number length (ex: Series with that is 99 or less would be 2, 100 to 999 would be 3).  Must be 2 or 3 (required)"
+	echo -e "\t-p \t The position where the episode number starts for each file.  Assumes it is the same for each file (ex: Hokuto no Ken 001.mkv would be 14, which is) (required)"
+	echo -e "\t-t \t Flag to do a test run before renaming the files.  Output will be logged to the log file (optional)"	
+	echo -e "\t-r \t flag used to re-number the episodes, starting at 1.  Assumes files are ordered correctly by default (optional)"	
+    echo -e "\t-h \t Help (optional)"
+    echo
+    echo "Example:"
+    echo -e "./tv-episode-filename-formatter.sh -n \"Hokuto no Ken\" -s 1 -d \"c:/Hokuto no Ken\" -e mkv -l 2 -p 15 -t"
+}
 
 # set default execute mode to testing = false
 testing="false"
@@ -19,7 +40,7 @@ testing="false"
 renumber="false"
 
 # Loop, get parameters & remove any spaces from input
-while getopts "n:s:d:e:l:p:tr" opt; do
+while getopts "n:s:d:e:l:p:trh" opt; do
     case $opt in
         n)
             # Series Name
@@ -53,10 +74,14 @@ while getopts "n:s:d:e:l:p:tr" opt; do
             # Renumber
             renumber="true"
         ;;
-        \?)            
-            # If user did not provide required parameters then show usage.
-            echo "Invalid parameters! Required parameters are:  [-n] seriesName [-s] seriesSeasonNumber [-d] episodeDirectory [-e] fileExtension [-l] episodeNumberLength [-p] episodeNumberStartPosition"
-        ;;   
+        :)            
+          echo "Error: -${OPTARG} requires a value"
+          exit 1
+        ;;
+        *)
+          usage
+          exit 1
+        ;;
     esac
 done
 
@@ -195,11 +220,3 @@ if [ "$renumber" == "false" ]; then
 else
 	renumberEpisodes
 fi
-
-
-
-
-
-
-
-

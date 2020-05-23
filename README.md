@@ -26,6 +26,7 @@ chmod +x tv-episode-filename-formatter.sh
 - [-p] episodeNumberStartPosition - The position where the episode number starts for each file.  Assumes it is the same for each file *(ex: Hokuto no Ken 001.mkv would be 14, which is the position of the first 0 in the file name)*.
 - [-t] testing - OPTIONAL flag to do a test run before renaming the files.  Output will be logged to the log file.
 - [-r] renumber - OPTIONAL flag used to re-number the episodes, starting at 1.  Assumes files are ordered correctly by default.
+- [-h] help
 
 *Notes:*
 
