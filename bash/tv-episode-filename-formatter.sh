@@ -11,6 +11,7 @@
 #- [-p] episodeNumberStartPosition - The position where the episode number starts for each file.  Assumes it is the same for each file (ex: Hokuto no Ken 001.mkv would be 14, which is).
 #- [-t] testing - OPTIONAL flag to do a test run before renaming the files.  Output will be logged to the log file.
 #- [-r] renumber - OPTIONAL flag used to re-number the episodes, starting at 1.  Assumes files are ordered correctly by default.
+#- [-c] renumberStart - OPTIONAL flag used to define the starting number for the re-number logic.  Default is 1 when -r set and not provided.
 #- [-h] help
 ###########################################################################################################################################################################################
 
@@ -26,8 +27,9 @@ function usage() {
     echo -e "\t-e \t File Extension filter (ex: mkv, mp4) (required)"        
     echo -e "\t-l \t Episode number length (ex: Series with that is 99 or less would be 2, 100 to 999 would be 3).  Must be 2 or 3 (required)"
 	echo -e "\t-p \t The position where the episode number starts for each file.  Assumes it is the same for each file (ex: Hokuto no Ken 001.mkv would be 14, which is) (required)"
-	echo -e "\t-t \t Flag to do a test run before renaming the files.  Output will be logged to the log file (optional)"	
-	echo -e "\t-r \t flag used to re-number the episodes, starting at 1.  Assumes files are ordered correctly by default (optional)"	
+	echo -e "\t-t \t Flag to do a test run before renaming the files.  Output will be logged to the log file (optional)"
+	echo -e "\t-r \t flag used to re-number the episodes, starting at 1.  Assumes files are ordered correctly by default (optional)"
+	echo -e "\t-c \t flag used to define the starting number for the re-number logic.  Default is 1 when -r set and not provided"
     echo -e "\t-h \t Help (optional)"
     echo
     echo "Example:"
@@ -38,9 +40,12 @@ function usage() {
 testing="false"
 # set default renumber flag = false
 renumber="false"
+# set default renumberStart = 1
+renumberStart=1
 
 # Loop, get parameters & remove any spaces from input
-while getopts "n:s:d:e:l:p:trh" opt; do
+while getopts "n:s:d:e:l:p:trc:h" opt; do
+
     case $opt in
         n)
             # Series Name
@@ -74,6 +79,10 @@ while getopts "n:s:d:e:l:p:trh" opt; do
             # Renumber
             renumber="true"
         ;;
+        c)
+            # Renumber Start
+            renumberStart=$OPTARG
+        ;;		
         :)            
           echo "Error: -${OPTARG} requires a value"
           exit 1
@@ -157,7 +166,7 @@ rename () {
 #- $1 - Log file entry
 #######################################################
 renumberEpisodes () {
-	episodeNumber=1
+	episodeNumber=$renumberStart
 
 	# loop through each file
 	for f in $files
